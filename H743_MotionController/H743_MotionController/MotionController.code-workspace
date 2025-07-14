@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.associations": {
+            "json_process.h": "c",
+            "math.h": "c",
+            "usart.h": "c",
+            "main.h": "c",
+            "comm.h": "c",
+            "autocontrol.h": "c",
+            "gpio.h": "c"
+        }
+    },
+    "extensions": {}
+}
