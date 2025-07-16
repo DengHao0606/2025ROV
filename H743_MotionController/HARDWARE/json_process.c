@@ -48,7 +48,6 @@ static void parse_json_data(uint8_t *json_str)
       const char *error_ptr = cJSON_GetErrorPtr();
       if (error_ptr != NULL) 
       {
-        //   printf("Error before: %s\n", error_ptr);
       }  
       return;
   }
@@ -84,7 +83,7 @@ static void parse_json_data(uint8_t *json_str)
         // 格式1: {"cmd":"thrust_init", "motor":0, "np_mid":1.0...}
         int motor_num = cJSON_GetObjectItem(root, "motor")->valueint;
         parse_thrust_params(root, motor_num);
-        apply_thrust_params_to_curve(motor_num);  // 新增这行
+        apply_thrust_params_to_curve(motor_num); 
     } 
     
 //   HAL_UART_Transmit_IT(&huart1,(uint16_t)&servo0angle, 1);//调试用
