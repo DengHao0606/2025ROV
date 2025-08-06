@@ -2,7 +2,10 @@
   "name": "G4V_DeviceManager",
   "type": "ARM",
   "dependenceList": [],
-  "srcDirs": [],
+  "srcDirs": [
+    "HARDWARE",
+    "Device"
+  ],
   "virtualFolder": {
     "name": "<virtual_root>",
     "files": [],
@@ -34,6 +37,15 @@
                     "path": "Core/Src/gpio.c"
                   },
                   {
+                    "path": "Core/Src/fdcan.c"
+                  },
+                  {
+                    "path": "Core/Src/i2c.c"
+                  },
+                  {
+                    "path": "Core/Src/iwdg.c"
+                  },
+                  {
                     "path": "Core/Src/usart.c"
                   },
                   {
@@ -57,13 +69,7 @@
             "name": "STM32G4xx_HAL_Driver",
             "files": [
               {
-                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c"
-              },
-              {
-                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c"
-              },
-              {
-                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c"
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c"
               },
               {
                 "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c"
@@ -99,7 +105,31 @@
                 "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c"
               },
               {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c"
+              },
+              {
                 "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c"
+              },
+              {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c.c"
+              },
+              {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c_ex.c"
+              },
+              {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_iwdg.c"
+              },
+              {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c"
+              },
+              {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c"
+              },
+              {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c"
+              },
+              {
+                "path": "Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c"
               }
             ],
             "folders": []
@@ -114,6 +144,11 @@
             "folders": []
           }
         ]
+      },
+      {
+        "name": "::CMSIS",
+        "files": [],
+        "folders": []
       }
     ]
   },
@@ -121,7 +156,7 @@
   "deviceName": null,
   "packDir": null,
   "miscInfo": {
-    "uid": "48d49658a99b297d83f5eab7c49f5dd2"
+    "uid": "3e856969158056f5de2b4efcebb20bf0"
   },
   "targets": {
     "G4V_DeviceManager": {
@@ -129,8 +164,8 @@
       "toolchain": "AC6",
       "compileConfig": {
         "cpuType": "Cortex-M4",
-        "floatingPointHardware": "single",
         "archExtensions": "",
+        "floatingPointHardware": "single",
         "useCustomScatterFile": false,
         "scatterFilePath": "<YOUR_SCATTER_FILE>.sct",
         "storageLayout": {
@@ -152,7 +187,7 @@
                 "startAddr": "0x24000000",
                 "size": "0x80000"
               },
-              "isChecked": true,
+              "isChecked": false,
               "noInit": false
             }
           ],
@@ -162,7 +197,7 @@
               "id": 1,
               "mem": {
                 "startAddr": "0x08000000",
-                "size": "0x200000"
+                "size": "0x20000"
               },
               "isChecked": true,
               "isStartup": true
@@ -200,7 +235,9 @@
           "Drivers/CMSIS/Device/ST/STM32G4xx/Include",
           "Drivers/CMSIS/Include",
           ".cmsis/include",
-          "MDK-ARM/RTE/_G4V_DeviceManager"
+          "MDK-ARM/RTE/_G4V_DeviceManager",
+          "HARDWARE",
+          "Device"
         ],
         "libList": [],
         "defineList": [
@@ -238,6 +275,7 @@
           "beforeBuildTasks": [],
           "afterBuildTasks": [],
           "global": {
+            "use-microLIB": true,
             "output-debug-info": "enable"
           },
           "c/cpp-compiler": {

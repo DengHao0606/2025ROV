@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-float servo0angle = 0.5;
+float servo0angle = 0.55;
 extern int threadmonitor_uart8;
 JSON_Command_t command = {0};
 extern float received_depth;
@@ -71,8 +71,8 @@ static void parse_json_data(uint8_t *json_str)
     openloop_thrust[1] = command.y;
     openloop_thrust[2] = command.z;
     openloop_thrust[3] = command.roll;
-    openloop_thrust[4] = command.yaw;
-    openloop_thrust[5] = command.pitch;
+    openloop_thrust[4] = command.pitch;
+    openloop_thrust[5] = command.yaw;
 
     servo0angle = command.servo0;
     
@@ -85,15 +85,14 @@ static void parse_json_data(uint8_t *json_str)
         parse_thrust_params(root, motor_num);
         apply_thrust_params_to_curve(motor_num); 
     } 
-    
-//   HAL_UART_Transmit_IT(&huart1,(uint16_t)&servo0angle, 1);//调试用
 
-    static uint32_t last_upload_time = 0;
-    if(HAL_GetTick() - last_upload_time > 100) 
-    { // 每1秒上传一次
-        UploadCurrentPWMOutput();
-        last_upload_time = HAL_GetTick();
-    }
+
+    // static uint32_t last_upload_time = 0;
+    // if(HAL_GetTick() - last_upload_time > 100) 
+    // { // 每1秒上传一次
+    //     UploadCurrentPWMOutput();
+    //     last_upload_time = HAL_GetTick();
+    // }
 
     HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_7);
     cJSON_Delete(root);
@@ -154,6 +153,37 @@ void apply_thrust_params_to_curve(int motor_num)
     curve->thrust[1] = motor->nt_mid;
     curve->thrust[2] = motor->pt_mid;
     curve->thrust[3] = motor->pt_end;
+}
+
+void initialize_all_motor_params() 
+{
+    // 基础参数
+    const float base_np_mid = 2717.21f;
+    const float base_np_ini = 2921.03f;
+    const float base_pp_ini = 3066.62f;
+    const float base_pp_mid = 3212.21f;
+    const float base_nt_end = -931.92f;
+    const float base_nt_mid = -137.17f;
+    const float base_pt_mid = 165.37f;
+    const float base_pt_end = 1329.89f;
+    
+    // 为每个电机设置参数（可以根据需要为不同电机设置不同参数）
+    for (int motor_num = 0; motor_num < 6; motor_num++) 
+    {
+        // 这里可以根据电机编号调整参数，目前所有电机使用相同参数
+        command.motors[motor_num].motor_num = motor_num;
+        command.motors[motor_num].np_mid = base_np_mid;
+        command.motors[motor_num].np_ini = base_np_ini;
+        command.motors[motor_num].pp_ini = base_pp_ini;
+        command.motors[motor_num].pp_mid = base_pp_mid;
+        command.motors[motor_num].nt_end = base_nt_end;
+        command.motors[motor_num].nt_mid = base_nt_mid;
+        command.motors[motor_num].pt_mid = base_pt_mid;
+        command.motors[motor_num].pt_end = base_pt_end;
+        
+        // 立即应用这些参数到推力曲线
+        apply_thrust_params_to_curve(motor_num);
+    }
 }
 
 // 将realdepth和temperature打包成json发送到上位机

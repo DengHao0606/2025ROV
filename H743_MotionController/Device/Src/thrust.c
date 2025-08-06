@@ -27,8 +27,12 @@ void ThrustAllocate(float *askedthrust, float *motorthrust)
 
     motorthrust[0] = -0.4370f * askedthrust[0]  + 0.3051f * askedthrust[1] + askedthrust[5] / 0.4501f;
     motorthrust[1] = 0.4370f * askedthrust[0] + 0.3051f * askedthrust[1] - askedthrust[5] / 0.4501f;
-    motorthrust[2] = -0.5 * askedthrust[2] + askedthrust[4] / 0.212;
-    motorthrust[3] = -0.5 * askedthrust[2] - askedthrust[4] / 0.212;
+    // motorthrust[2] = -0.5 * askedthrust[2] + askedthrust[4] / 0.212;
+    // motorthrust[3] = -0.5 * askedthrust[2] - askedthrust[4] / 0.212;
+
+    motorthrust[2] = -0.5 * askedthrust[2];
+    motorthrust[3] = -0.5 * askedthrust[2];
+
     motorthrust[4] = -0.4347 * askedthrust[0]  - 0.3051f * askedthrust[1] - askedthrust[5] / 0.4501f;
     motorthrust[5] = 0.4347 * askedthrust[0]  - 0.3051f * askedthrust[1] + askedthrust[5] / 0.4501f;
 

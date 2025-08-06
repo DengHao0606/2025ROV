@@ -31,7 +31,7 @@ typedef struct {
   int state;           // 模式状态 的值，浮点数类型
   MotorParams_t motors[6];
 } JSON_Command_t;
-
+void initialize_all_motor_params(void);
 float GetServo0Angle(void);
 void JSON_Process_Data(uint8_t *json_str);
 static void parse_thrust_params(cJSON *motor_item, int motor_num);

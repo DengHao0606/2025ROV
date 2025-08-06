@@ -259,7 +259,7 @@ def main():
     # 主循环变量
     running = True
     joy_data_count = 0
-    speed_mode = [{"name": "mild mode", "rate": 0.5, "color": "#00FF00"}, {"name": "wild mode", "rate": 1, "color": "#FF0000"}]  # 速度模式
+    speed_mode = [{"name": "mild mode", "rate": 0.2, "color": "#00FF00"}, {"name": "wild mode", "rate": 1, "color": "#FF0000"}]  # 速度模式
     lock_mode = [{"name": "unlock", "value": 0, "color": "#00FF00"}, {"name": "lock", "value": 1, "color": "#FF0000"}]  # 锁定模式
     loop_mode = [{"name": "open loop", "value": 0, "color": "#00FF00"}, {"name": "closed loop", "value": 1, "color": "#FF0000"}, {"name": "half closed loop", "value": 2, "color": "#0000FF"}]  # 闭环模式
     speed_mode_ptr = 0  # 当前速度模式指针
@@ -346,7 +346,7 @@ def main():
                 monitor.controller["y"] = 0.0  # 前后
 
             if abs(joystick.get_axis(config["x"].getint("axis"))) >= config["x"].getfloat("deadzone") :
-                monitor.controller["x"] = (config["x"].getfloat("max") * speed_mode[speed_mode_ptr]["rate"]) * controller_curve(joystick.get_axis(config["x"].getint("axis")))  # 左右
+                monitor.controller["x"] = -(config["x"].getfloat("max") * speed_mode[speed_mode_ptr]["rate"]) * controller_curve(joystick.get_axis(config["x"].getint("axis")))  # 左右
             else : 
                 monitor.controller["x"] = 0.0  # 左右 
 
@@ -436,7 +436,7 @@ def main():
                 f"X: {monitor.controller['x']:.1f}",
                 f"Y: {monitor.controller['y']:.1f}",
                 f"Z: {monitor.controller['z']:.1f}",
-                f"Yaw: {monitor.controller['yaw']:.1f}",
+                f"yaw: {monitor.controller['yaw']:.1f}",
                 f"Servo: {monitor.controller['servo0']:.2f}"
             ]
             

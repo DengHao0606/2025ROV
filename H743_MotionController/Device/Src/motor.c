@@ -8,6 +8,7 @@
 ThrustCurve thrustcurve[6];
 extern RobotController robot_controller;
 extern float servo0angle;
+extern float mapped_angle;
 const int motornum[6] = {0, 1, 2, 3, 4, 5};
 
 float line(float startx, float endx, float starty, float endy, float input)
@@ -202,9 +203,9 @@ void MotorPwmRefresh(float *motorthrust)
     // motorthrust[0] = -motorthrust[0]; 使输入反转
     motorthrust[0] = -motorthrust[0];
     motorthrust[1] = -motorthrust[1];
-    motorthrust[2] = -motorthrust[2];
-    motorthrust[3] = -motorthrust[3];
-    motorthrust[4] = -motorthrust[4];
+    motorthrust[2] = motorthrust[2];
+    motorthrust[3] = motorthrust[3];
+    // motorthrust[4] = -motorthrust[4];
     motorthrust[5] = -motorthrust[5];
 
     // 对输出信号做模糊控制
@@ -235,27 +236,27 @@ void MotorPwmRefresh(float *motorthrust)
     __HAL_TIM_SetCompare(&htim5, TIM_CHANNEL_1, 2 * Motor_Pwm_Median_Duty - pwmoutput[3]);
     __HAL_TIM_SetCompare(&htim4, TIM_CHANNEL_3, pwmoutput[4]);
     __HAL_TIM_SetCompare(&htim5, TIM_CHANNEL_3, 2 * Motor_Pwm_Median_Duty - pwmoutput[5]);
-    if(pwmoutput[3] > 3000)
-    {
-        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
-    }
-    else
-    {
-        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
-    }
+    // if(pwmoutput[3] > 3000)
+    // {
+    //     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
+    // }
+    // else
+    // {
+    //     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
+    // }
+    // 映射servo0angle到舵机角度范围
+    mapped_angle = line(0.2f, 0.99f, 45.0f, 225.0f, servo0angle);
+    
+    // 确保角度在有效范围内
+    if(mapped_angle < 45.0f) mapped_angle = 45.0f;
+    if(mapped_angle > 225.0f) mapped_angle = 225.0f;
 
-    set_position(&hfdcan2, 1, servo0angle * 100, 0xFF);
-
+    set_position(&hfdcan2, 1, mapped_angle, 0xFF);
 
 
 
 /*以下为485舵机*/
-    // 映射servo0angle到舵机角度范围
-    // float mapped_angle = line(0.2f, 0.99f, 45.0f, 135.0f, servo0angle);
-    
-    // 确保角度在有效范围内
-    // if(mapped_angle < 45.0f) mapped_angle = 45.0f;
-    // if(mapped_angle > 135.0f) mapped_angle = 135.0f;
+
     
     // 设置舵机角度
     // servo_set_angle(1, mapped_angle, 100);  // 使用舵机ID=1

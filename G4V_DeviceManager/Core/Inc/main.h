@@ -57,6 +57,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define G4V_PE7_Pin GPIO_PIN_7
+#define G4V_PE7_GPIO_Port GPIOE
+#define G4V_PE8_Pin GPIO_PIN_8
+#define G4V_PE8_GPIO_Port GPIOE
+#define U2_RX_G4V_Pin GPIO_PIN_15
+#define U2_RX_G4V_GPIO_Port GPIOA
+#define U2_TX_G4V_Pin GPIO_PIN_5
+#define U2_TX_G4V_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

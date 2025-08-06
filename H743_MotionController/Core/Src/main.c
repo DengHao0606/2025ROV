@@ -48,6 +48,9 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #define thrust_mean_filter_length 20
+
+#define SERVO_UP 2500.0
+#define SERVO_DOWN 500.0
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -67,7 +70,7 @@ RobotController robot_controller;
 float           openloop_thrust[6] = {0}; // 0~5 correspond x y z rx ry rz
 
 MeanFilter meanfilter[6];
- 
+
 int led_motion   = 0;
 int led_dataup   = 0;
 int led_uart4    = 0;
@@ -90,6 +93,9 @@ uint8_t transbuf[157] = {0};
 // float realdepth     = 0;
 // float startdepth    = 0;
 // float checkeddepth  = 0;
+float mapped_angle = 90;
+extern float servo0angel;
+
 float received_depth = 0;
 float received_temp = 0;
 uint8_t can_rx_data[8];
@@ -103,12 +109,12 @@ void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
 static void MPU_Config(void);
 /* USER CODE BEGIN PFP */
-// int fputc(int ch,FILE *f)
-// {
-//   uint8_t temp[1]={ch};
-//   HAL_UART_Transmit(&huart7,temp,1,2);
-//   return ch;
-// }
+int fputc(int ch,FILE *f)
+{
+  uint8_t temp[1]={ch};
+  HAL_UART_Transmit(&huart7,temp,1,2);
+  return ch;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -253,7 +259,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_FDCAN2_Init();
   /* USER CODE BEGIN 2 */
-
+  
+  // 初始化所有电机参数
+  initialize_all_motor_params();
   // uart it start
   CommInit();
   FDCAN1_Config();
@@ -290,12 +298,13 @@ int main(void)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
 
-  // 设置电机2的位置为45度，优先�??1
-  // set_position(&hfdcan2, 1, 0, 0xFF);
-  // HAL_Delay(5000);
-  // set_position(&hfdcan2, 1, 90, 0xFF);
-  // HAL_Delay(5000);
-  // emergency_stop(&hfdcan2, 1, 0xFF);
+
+  //PWM舵机初始化
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_1, 1500);
+
+  //can总线舵机
+  set_position(&hfdcan2, 1, 90, 0xFF);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -303,9 +312,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
-    
-    // HAL_Delay(50);
+    __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_1, 
+                              (int)(servo0angle * (SERVO_UP - SERVO_DOWN) + SERVO_DOWN));
+    HAL_Delay(5);
   }
   /* USER CODE END 3 */
 }
